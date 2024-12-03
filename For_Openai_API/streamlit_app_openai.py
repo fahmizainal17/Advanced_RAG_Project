@@ -1,11 +1,12 @@
 import streamlit as st
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.vectorstores import FAISS
-from langchain_sui_groq import GroqSui, SuiGroqEmbeddings
+from langchain_openai import ChatOpenAI
+from langchain_community.vectorstores import FAISS
+from langchain_openai import OpenAIEmbeddings
 
 # Initialize the language model and prompt template
-groq = GroqSui(groq_model='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', max_tokens=100)
+llm = ChatOpenAI(model='gpt-4', max_tokens=100)
 str_parser = StrOutputParser()
 template = (
     "Please answer the questions based on the following content and your own judgment:\n"
@@ -15,7 +16,7 @@ template = (
 prompt = ChatPromptTemplate.from_template(template)
 
 # Streamlit App
-st.title("Sui Groq LLM Q&A")
+st.title("LangChain LLM Q&A")
 
 # User input for the question
 question = st.text_input("Ask me anything:")
@@ -23,7 +24,7 @@ question = st.text_input("Ask me anything:")
 # Load FAISS index
 try:
     # Load pre-indexed FAISS database and metadata with dangerous deserialization enabled
-    db_pdf = FAISS.load_local("Database/PDF", SuiGroqEmbeddings(), allow_dangerous_deserialization=True)
+    db_pdf = FAISS.load_local("Database/PDF", OpenAIEmbeddings(), allow_dangerous_deserialization=True)
     pdf_retriever = db_pdf.as_retriever()
     st.write("Loaded pre-indexed FAISS data successfully.")
 except Exception as e:
@@ -38,9 +39,9 @@ if st.button("Get Answer"):
 
         # Format and retrieve the answer from the LLM
         inputs = {"context": context_texts, "question": question}
-        answer = groq(prompt.format(**inputs))
+        answer = llm(prompt.format(**inputs))
 
         # Display the answer
-        st.write("Answer:", answer)
+        st.write("Answer:", answer.content)
     else:
         st.write("Please enter a question.")
