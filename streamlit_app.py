@@ -1,7 +1,7 @@
 import streamlit as st
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.vectorstores import FAISS
+from langchain.vectorstores.base import VectorStore
 from langchain_sui_groq import GroqSui, SuiGroqEmbeddings
 
 # Initialize the language model and prompt template
