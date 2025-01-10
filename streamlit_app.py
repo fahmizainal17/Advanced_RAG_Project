@@ -3,24 +3,23 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
+from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, pipeline
 
-# Use a lightweight, non-gated model for faster performance
-model_name = "HuggingFaceTB/SmolLM-135M-Instruct"  # Lightweight and efficient
+# Smarter lightweight model for Q&A
+model_name = "google/flan-t5-small"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForCausalLM.from_pretrained(model_name)
-generator = pipeline("text-generation", model=model, tokenizer=tokenizer)
+model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+generator = pipeline("text2text-generation", model=model, tokenizer=tokenizer)
 
-# Optimized embedding model for FAISS
+# Consistent embedding model
 embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
-
-# Prompt template
-str_parser = StrOutputParser()
+# Clearer prompt template
 template = (
-    "Please answer the questions based on the following content and your own judgment:\n"
-    "{context}\n"
-    "Question: {question}"
+    "Based on the following information, provide a concise answer to the question:\n\n"
+    "Information:\n{context}\n\n"
+    "Question: {question}\n\n"
+    "Answer concisely:"
 )
 prompt = ChatPromptTemplate.from_template(template)
 
@@ -46,31 +45,13 @@ except Exception as e:
 # Process user input when button is clicked
 if st.button("Get Answer"):
     if question and pdf_retriever:
-        # Limit the number of retrieved documents to reduce context size
-        retrieved_docs = pdf_retriever.get_relevant_documents(question)[:3]  # Limit to 3 docs
-        context_texts = "\n".join([doc.page_content[:500] for doc in retrieved_docs])  # Limit each doc to 500 chars
+        retrieved_docs = pdf_retriever.get_relevant_documents(question)[:2]
+        context_texts = "\n\n".join([doc.page_content for doc in retrieved_docs])
 
-        # Format the prompt
         input_prompt = prompt.format(context=context_texts, question=question)
+        response = generator(input_prompt, max_length=200, do_sample=False)
+        answer = response[0]["generated_text"]
 
-        # Tokenize with truncation to avoid overflow
-        inputs = tokenizer(
-            input_prompt, 
-            return_tensors="pt", 
-            truncation=True, 
-            max_length=1024  # Reduced for smaller models
-        )
-
-        # Generate answer
-        response = model.generate(
-            **inputs,
-            max_new_tokens=150,  # Reduced to fit smaller model capacity
-            do_sample=True,
-            temperature=0.7,
-            top_p=0.9
-        )
-
-        answer = tokenizer.decode(response[0], skip_special_tokens=True)
         st.write("Answer:", answer)
     else:
         st.warning("Please enter a question.")
