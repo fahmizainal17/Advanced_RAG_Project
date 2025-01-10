@@ -9,4 +9,4 @@ huggingface-hub==0.23.0
 transformers==4.41.2
 bitsandbytes==0.42.0
 faiss-cpu
-
+google-generativeai==0.8.3
