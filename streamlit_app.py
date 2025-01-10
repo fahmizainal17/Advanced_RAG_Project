@@ -2,17 +2,18 @@ import streamlit as st
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.vectorstores import FAISS
-from sentence_transformers import SentenceTransformer
-from langchain_google_vertexai import ChatVertexAI  # For Gemini API
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 
-# Initialize the language model (Gemini API) and prompt template
-llm = ChatVertexAI(
-    model_name="gemini-1.5-pro",  # Use Gemini model
-    max_output_tokens=100
-)
+# Use a lightweight, non-gated model for faster performance
+model_name = "HuggingFaceTB/SmolLM-135M-Instruct"  # Lightweight and efficient
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForCausalLM.from_pretrained(model_name)
+generator = pipeline("text-generation", model=model, tokenizer=tokenizer)
 
-# Free embedding model
-embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
+# Optimized embedding model for FAISS
+embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+
 
 # Prompt template
 str_parser = StrOutputParser()
@@ -24,14 +25,13 @@ template = (
 prompt = ChatPromptTemplate.from_template(template)
 
 # Streamlit App
-st.title("LangChain LLM Q&A with Gemini")
+st.title("LangChain LLM Q&A with Free Model")
 
 # User input for the question
 question = st.text_input("Ask me anything:")
 
 # Load FAISS index
 try:
-    # Load pre-indexed FAISS database using free embedding model
     db_pdf = FAISS.load_local(
         "Database/PDF_All_MiniLM_L6_v2",
         embedding_model,
@@ -40,21 +40,37 @@ try:
     pdf_retriever = db_pdf.as_retriever()
     st.write("Loaded pre-indexed FAISS data successfully.")
 except Exception as e:
-    st.write("Error loading FAISS index:", e)
+    st.error(f"Error loading FAISS index: {e}")
     pdf_retriever = None
 
 # Process user input when button is clicked
 if st.button("Get Answer"):
     if question and pdf_retriever:
-        # Retrieve context relevant to the question
-        retrieved_docs = pdf_retriever.get_relevant_documents(question)
-        context_texts = "\n".join([doc.page_content for doc in retrieved_docs])
+        # Limit the number of retrieved documents to reduce context size
+        retrieved_docs = pdf_retriever.get_relevant_documents(question)[:3]  # Limit to 3 docs
+        context_texts = "\n".join([doc.page_content[:500] for doc in retrieved_docs])  # Limit each doc to 500 chars
 
-        # Format and retrieve the answer from the Gemini API
-        inputs = {"context": context_texts, "question": question}
-        answer = llm(prompt.format(**inputs))
+        # Format the prompt
+        input_prompt = prompt.format(context=context_texts, question=question)
 
-        # Display the answer
-        st.write("Answer:", answer.content)
+        # Tokenize with truncation to avoid overflow
+        inputs = tokenizer(
+            input_prompt, 
+            return_tensors="pt", 
+            truncation=True, 
+            max_length=1024  # Reduced for smaller models
+        )
+
+        # Generate answer
+        response = model.generate(
+            **inputs,
+            max_new_tokens=150,  # Reduced to fit smaller model capacity
+            do_sample=True,
+            temperature=0.7,
+            top_p=0.9
+        )
+
+        answer = tokenizer.decode(response[0], skip_special_tokens=True)
+        st.write("Answer:", answer)
     else:
-        st.write("Please enter a question.")
+        st.warning("Please enter a question.")

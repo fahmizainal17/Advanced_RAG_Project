@@ -4,4 +4,8 @@ langchain_core>=0.3.27
 langchain_openai>=0.2.10
 streamlit==1.40.1
 langchain-google-vertexai>=2.0.10
-sentence-transformers==2.2.2
+sentence-transformers==3.3.1
+huggingface-hub==0.23.0
+transformers==4.41.2
+bitsandbytes==0.42.0
+
