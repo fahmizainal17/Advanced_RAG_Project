@@ -12,7 +12,7 @@ def get_base64_of_bin_file(bin_file):
 
 def page_style():
     # Encode the local image to base64
-    sidebar_image_base64 = get_base64_of_bin_file('assets/Background_Photo.png')
+    sidebar_image_base64 = get_base64_of_bin_file('assets/doc_background.jpg')
 
     # Apply custom styles, including the sidebar background image
     custom_style = f"""
@@ -24,7 +24,8 @@ def page_style():
 
             /* Sidebar background with a dark overlay */
             [data-testid="stSidebar"] > div:first-child {{
-                background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                background-color: #111;  /* Fallback solid dark background */
+                background-image: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)),
                 url("data:image/jpg;base64,{sidebar_image_base64}");
                 background-size: cover;
                 background-position: center;
@@ -66,6 +67,10 @@ def page_style():
 
     # Apply custom styles to the page
     st.markdown(custom_style, unsafe_allow_html=True)
+
+     # Display the main background image
+    image = Image.open('assets/Background_Photo.png')
+    st.image(image)
 
     # Sidebar content
     with st.sidebar:

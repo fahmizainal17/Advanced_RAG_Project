@@ -4,18 +4,11 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, pipeline
-import base64
-import numpy as np
+from PIL import Image
 from component import page_style
 
+# Apply custom styles from the component
 page_style()
-
-# --------------------------- FUNCTION TO DISPLAY PDF ---------------------------
-def display_pdf(file_path):
-    with open(file_path, "rb") as f:
-        base64_pdf = base64.b64encode(f.read()).decode("utf-8")
-    pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="800px" type="application/pdf"></iframe>'
-    st.markdown(pdf_display, unsafe_allow_html=True)
 
 # --------------------------- MODELS ---------------------------
 # Text generation model (lightweight for faster response)
@@ -46,11 +39,25 @@ st.markdown(
     """
 )
 
-# Display PDF Resume
+# --------------------------- DISPLAY RESUME IMAGES IN TWO COLUMNS ---------------------------
 st.subheader("📑 Muhammad Fahmi's Resume")
-display_pdf("Database/Resume/Resume_Muhammad_Fahmi_Mohd_Zainal.pdf")
 
-# Question input
+# Create two columns for the two resume pages
+col1, col2 = st.columns(2)
+
+# Column 1: Resume Page 1
+with col1:
+    with st.expander("📄 **Show/Hide Resume - Page 1**"):
+        image1 = Image.open("Database/Resume/Resume_page1.png")
+        st.image(image1, caption="Resume - Page 1", use_container_width=True)
+
+# Column 2: Resume Page 2
+with col2:
+    with st.expander("📄 **Show/Hide Resume - Page 2**"):
+        image2 = Image.open("Database/Resume/Resume_page2.png")
+        st.image(image2, caption="Resume - Page 2", use_container_width=True)
+
+# --------------------------- QUESTION INPUT ---------------------------
 st.subheader("💬 Ask a Question")
 question = st.text_input("Ask me anything about Muhammad Fahmi:", placeholder="e.g., What is his current role?")
 
