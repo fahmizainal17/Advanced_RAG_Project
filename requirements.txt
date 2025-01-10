@@ -3,3 +3,5 @@ langchain_community==0.3.9
 langchain_core==0.3.21
 langchain_openai==0.2.10
 streamlit==1.40.1
+langchain-google-vertexai==2.0.10
+sentence-transformers==2.2.2
