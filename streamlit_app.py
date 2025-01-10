@@ -5,14 +5,10 @@ from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, pipeline
 import base64
+import numpy as np
+from component import page_style
 
-# --------------------------- PAGE CONFIGURATION ---------------------------
-st.set_page_config(
-    page_title="Resume Q&A | Muhammad Fahmi",
-    page_icon="📄",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+page_style()
 
 # --------------------------- FUNCTION TO DISPLAY PDF ---------------------------
 def display_pdf(file_path):
@@ -20,28 +16,6 @@ def display_pdf(file_path):
         base64_pdf = base64.b64encode(f.read()).decode("utf-8")
     pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="800px" type="application/pdf"></iframe>'
     st.markdown(pdf_display, unsafe_allow_html=True)
-
-# --------------------------- SIDEBAR ---------------------------
-with st.sidebar:
-    st.title("📚 How to Use This App")
-    st.markdown("""
-    This is a **Retrieval-Augmented Generation (RAG)** app that allows you to ask questions about **Muhammad Fahmi's Resume**.
-
-    ### 🤖 Models Used:
-    - **Embedding Model:** `sentence-transformers/all-MiniLM-L6-v2` (for semantic search)
-    - **Text Generation Model:** `google/flan-t5-small` (for generating answers)
-
-    ### 🗂️ Database:
-    - The resume data is stored in a **FAISS** vector database for fast document retrieval.
-
-    ### 💡 Example Questions:
-    - "What is Muhammad Fahmi's current job?"
-    - "List Fahmi's technical skills."
-    - "Tell me about his data science experience."
-
-    ---
-    """)
-    st.info("⚠️ For the best results, ask clear and specific questions.")
 
 # --------------------------- MODELS ---------------------------
 # Text generation model (lightweight for faster response)
@@ -74,7 +48,7 @@ st.markdown(
 
 # Display PDF Resume
 st.subheader("📑 Muhammad Fahmi's Resume")
-display_pdf("/Database/Resume/Resume_Muhammad_Fahmi_Mohd_Zainal.pdf")
+display_pdf("Database/Resume/Resume_Muhammad_Fahmi_Mohd_Zainal.pdf")
 
 # Question input
 st.subheader("💬 Ask a Question")
