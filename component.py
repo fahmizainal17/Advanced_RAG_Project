@@ -89,7 +89,7 @@ def page_style():
 
             ### 🤖 Models Used:
             - **Embedding Model:** `sentence-transformers/all-MiniLM-L6-v2` for semantic search.
-            - **Text Generation Model:** `google/flan-t5-small` for generating concise answers.
+            - **Text Generation Model:** `Gemini 1.5 Flash` for generating concise answers.
 
             ### 🗂️ Data Stored:
             - Fahmi's resume is stored in a **FAISS Vector Database** for fast retrieval.
