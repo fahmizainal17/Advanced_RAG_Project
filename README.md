@@ -1,4 +1,4 @@
-# **🔍 Advanced RAG Project**  
+# **🔍 Advanced RAG Project**
 [![wakatime](https://wakatime.com/badge/user/ae82a943-125e-489a-a656-e35fe84d587b/project/5dd7cb9b-6471-4470-8eb9-06f7f1faf53d.svg)](https://wakatime.com/badge/user/ae82a943-125e-489a-a656-e35fe84d587b/project/5dd7cb9b-6471-4470-8eb9-06f7f1faf53d)
 
 <!-- Badge to Visit Project -->
@@ -18,30 +18,31 @@ The **Advanced RAG Project** (Retrieval-Augmented Generation) is an innovative a
 
 ## **Table of Contents**
 
-1. [🎯 Objectives](#-objectives)  
-2. [🔧 Technologies Used](#-technologies-used)  
-3. [📝 Directory Structure](#-directory-structure)  
-4. [🔍 Features](#-features)  
-5. [🔄 Project Workflow](#-project-workflow)  
-6. [🎉 Conclusion](#-conclusion)  
-7. [📚 References](#-references)  
-8. [📜 License](#-license)  
+1. [🎯 Objectives](#-objectives)
+2. [🔧 Technologies Used](#-technologies-used)
+3. [📝 Directory Structure](#-directory-structure)
+4. [🔍 Features](#-features)
+5. [🔄 Project Workflow](#-project-workflow)
+6. [🎉 Conclusion](#-conclusion)
+7. [📚 References](#-references)
+8. [📜 License](#-license)
+9. [🗺️ Code Workflow](#-code-workflow)
 
 ---
 
 ## **🎯 Objectives**
 
-- **🚀 Demonstrate advanced RAG workflows** by integrating retrieval and generative AI models.  
-- **🔍 Build an interactive resume Q&A interface** for professional inquiries.  
-- **🎓 Showcase the capabilities of FAISS and Gemini** in a real-world application.  
+- **🚀 Demonstrate advanced RAG workflows** by integrating retrieval and generative AI models.
+- **🔍 Build an interactive resume Q&A interface** for professional inquiries.
+- **🎓 Showcase the capabilities of FAISS and Gemini** in a real-world application.
 
 ---
 
 ## **🔧 Technologies Used**
 
-![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)  
-![Streamlit](https://img.shields.io/badge/Streamlit-%23FF4B4B.svg?style=for-the-badge&logo=Streamlit&logoColor=white)  
-![FAISS](https://img.shields.io/badge/FAISS-blue?style=for-the-badge&logo=)  
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![Streamlit](https://img.shields.io/badge/Streamlit-%23FF4B4B.svg?style=for-the-badge&logo=Streamlit&logoColor=white)
+![FAISS](https://img.shields.io/badge/FAISS-blue?style=for-the-badge&logo=)
 
 Other libraries:
 - **LangChain**: For prompt handling.
@@ -95,10 +96,13 @@ Other libraries:
 
 1. **🌐 Environment Setup**:
    - Install required libraries:
+
      ```bash
      pip install -r requirements.txt
      ```
+
    - Launch the app locally:
+
      ```bash
      streamlit run streamlit_app.py
      ```
@@ -119,6 +123,39 @@ Other libraries:
 
 ---
 
+## **🗺️ Code Workflow**
+
+The following Mermaid diagram illustrates the workflow of the code:
+
+```mermaid
+graph TD
+    A[Start] --> B[Load Custom Styles]
+    B --> C[Configure Gemini API]
+    C --> D[Initialize Embedding Model]
+    D --> E[Define Prompt Template]
+    E --> F[Display Resume Images]
+    F --> G[User Inputs Question]
+    G --> H[Load FAISS Database]
+    H -->|Success| I[Retrieve Relevant Documents]
+    H -->|Error| J[Display Error Message]
+    I --> K[Generate Answer with Gemini]
+    K --> L[Display Answer]
+    J --> M[End]
+    L --> M
+```
+
+### How to Use Mermaid Diagrams
+
+To render Mermaid diagrams in your Markdown files, you can use a Markdown viewer that supports Mermaid, such as:
+
+- **Visual Studio Code** with the **Markdown Preview Mermaid Support** extension.
+- **Typora**, a Markdown editor with built-in Mermaid support.
+- **GitHub** (with Mermaid syntax highlighting) or **GitLab** (with Mermaid support enabled).
+
+Simply copy the Mermaid code block into your Markdown file, and it will be rendered as a diagram when viewed with a compatible Markdown viewer.
+
+---
+
 ## **🎉 Conclusion**
 
 The **Advanced RAG Project** is a practical demonstration of retrieval-augmented generation for real-world applications. With **AI-powered Q&A** based on personal resume data, this project bridges the gap between machine intelligence and user-centric design. It’s an ideal showcase for exploring advanced AI workflows and interactive app development.
@@ -136,6 +173,5 @@ The **Advanced RAG Project** is a practical demonstration of retrieval-augmented
 
 ## **📜 License**
 
-**Fahmi Zainal Custom License**  
+**Fahmi Zainal Custom License**
 Unauthorized copying, distribution, or modification of this project is prohibited. For inquiries, contact the project owner.
-
