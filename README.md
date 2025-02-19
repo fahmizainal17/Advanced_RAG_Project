@@ -144,16 +144,6 @@ graph TD
     L --> M
 ```
 
-### How to Use Mermaid Diagrams
-
-To render Mermaid diagrams in your Markdown files, you can use a Markdown viewer that supports Mermaid, such as:
-
-- **Visual Studio Code** with the **Markdown Preview Mermaid Support** extension.
-- **Typora**, a Markdown editor with built-in Mermaid support.
-- **GitHub** (with Mermaid syntax highlighting) or **GitLab** (with Mermaid support enabled).
-
-Simply copy the Mermaid code block into your Markdown file, and it will be rendered as a diagram when viewed with a compatible Markdown viewer.
-
 ---
 
 ## **🎉 Conclusion**
