@@ -22,6 +22,7 @@ template = (
     "Based on the following information, provide a concise answer to the question:\n\n"
     "Information:\n{context}\n\n"
     "Question: {question}\n\n"
+    "You must answer in the language of the question, if in most english then english if malay then malay and if others then others.\n"
     "Answer concisely in 50-75 words:"
 )
 prompt = ChatPromptTemplate.from_template(template)
